@@ -21,4 +21,23 @@ public class EmployeeService {
         return employeeMapper.selectByExampleWithDept(null);
     }
 
+    public void saveEmp(Employee employee) {
+        employeeMapper.insertSelective(employee);
+    }
+
+    /**
+     * 检验用户名是否可用
+     * true 代表可用
+     * false代表不可用
+     * @param empName
+     * @return
+     */
+
+    public boolean checkUser(String empName) {
+        EmployeeExample employeeExample = new EmployeeExample();
+        EmployeeExample.Criteria criteria = employeeExample.createCriteria();
+        criteria.andEmpNameEqualTo(empName);
+        long count = employeeMapper.countByExample(employeeExample);
+        return count == 0;
+    }
 }
