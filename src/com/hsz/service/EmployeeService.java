@@ -40,4 +40,41 @@ public class EmployeeService {
         long count = employeeMapper.countByExample(employeeExample);
         return count == 0;
     }
+
+    /**
+     * 根据id输出员工信息
+     * @param id
+     * @return
+     */
+    public Employee getEmp(Integer id) {
+
+        return employeeMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 根据给定字段更新员工
+     * @param employee
+     */
+    public void updateEmp(Employee employee) {
+        employeeMapper.updateByPrimaryKeySelective(employee);
+    }
+
+    /**
+     * 员工删除
+     * @param id
+     */
+    public void deleteEmpById(Integer id) {
+        employeeMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 根据List<Integer>批量删除
+     * @param ids
+     */
+    public void deleteBatch(List<Integer> ids) {
+        EmployeeExample employeeExample = new EmployeeExample();
+        EmployeeExample.Criteria criteria = employeeExample.createCriteria();
+        criteria.andEmpIdIn(ids);
+        employeeMapper.deleteByExample(employeeExample);
+    }
 }

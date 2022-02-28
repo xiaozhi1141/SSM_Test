@@ -11,12 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +25,57 @@ public class EmployeeController {
 
     @Autowired
     EmployeeService employeeService;
+
+    /**
+     * 根据id单个/批量删除记录
+     * @param ids
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/emp/{ids}",method = RequestMethod.DELETE)
+    public Msg deleteEmp(@PathVariable("ids") String ids) {
+        if (ids.contains("-")) {
+            //批量删除
+            List<Integer> del_ids = new ArrayList<>();
+            String[] str_ids = ids.split("-");
+//            组装id的集合
+            for (String id:str_ids) {
+                del_ids.add(Integer.parseInt(id));
+            }
+            employeeService.deleteBatch(del_ids);
+        } else {
+            //单个删除
+            Integer id = Integer.parseInt(ids);
+            employeeService.deleteEmpById(id);
+
+        }
+        return Msg.success();
+    }
+
+    /**
+     * 员工更新
+     * r如果直接发送ajax=put形式请求 Employee不能正常获取数据，{empId}这个可以正常获取
+     * @param employee
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/emp/{empId}",method = RequestMethod.PUT)
+    public Msg updateEmp(Employee employee){
+        employeeService.updateEmp(employee);
+        return Msg.success();
+    }
+
+    /**
+     * 根据id查找员工
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/emp/{id}",method = RequestMethod.GET)
+    public Msg getEmp(@PathVariable("id") Integer id){
+        Employee employee = employeeService.getEmp(id);
+        return Msg.success().add("emp",employee);
+    }
 
     /**
      * 检查用户名是否可用
