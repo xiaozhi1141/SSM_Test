@@ -7,19 +7,20 @@
   Time: 13:10
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>员工列表</title>
     <%
-        pageContext.setAttribute("APP_PATH",request.getContextPath());
+        String APP_PATH = request.getScheme() + "://"+ request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/";
+        pageContext.setAttribute("APP_PATH",APP_PATH);
     %>
-    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <script type="text/javascript" src="${APP_PATH}/static/js/jquery-1.12.4.min.js"></script>
-    <link rel="stylesheet" href="${APP_PATH}/static/bootstrap-3.4.1-dist/css/bootstrap.min.css"
+    <base href=<%=APP_PATH%>>
+    <script type="text/javascript" src="static/js/jquery-1.12.4.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
           integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-    <script src="${APP_PATH}/static/bootstrap-3.4.1-dist/js/bootstrap.min.js"
-            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
-    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -192,7 +193,7 @@ $(function () {
 //发送ajax请求获取页面信息
 function to_page(pn){
     $.ajax({
-        url:"${APP_PATH}/emps",
+        url:"emps",
         data:"pn="+pn,
         type:"GET",
         success:function (result) {
@@ -326,7 +327,7 @@ function getDepts(ele){
     //清空之前下拉列表的值
     $(ele).empty();
     $.ajax({
-        url:"${APP_PATH}/depts",
+        url:"depts",
         type:"GET",
         async:false,
         success:function (result) {
@@ -380,7 +381,7 @@ function  show_validate_msg(ele,status,msg){
 $("#empName_add_input").change(function () {
     var empName = this.value;
     $.ajax({
-        url:"${APP_PATH}/checkuser",
+        url:"checkuser",
         data:"empName="+empName,
         type:"POST",
         success:function (result) {
@@ -408,7 +409,7 @@ $("#emp_save_but").click(function () {
     }
     //发送ajax请求保存员工
     $.ajax({
-        url:"${APP_PATH}/emp",
+        url:"emp",
         type:"post",
         data: $("#empAndModal form").serialize(),
         success: function (result) {
@@ -451,7 +452,7 @@ $(document).on("click",".edit_btn",function () {
 
 function getEmp(id){
     $.ajax({
-        url:"${APP_PATH}/emp/"+id,
+        url:"emp/"+id,
         type:"GET",
         async:false,
         success:function (result) {
@@ -478,7 +479,7 @@ $("#emp_update_btn").click(function () {
     }
     //发送ajax请求保存员工更新的数据
     $.ajax({
-        url:"${APP_PATH}/emp/"+$(this).attr("edit_id"),
+        url:"emp/"+$(this).attr("edit_id"),
         type:"PUT",
         data:$("#empUpdateModal form").serialize(),
         success:function (result) {
@@ -500,7 +501,7 @@ $(document).on("click",".delete_btn",function () {
    if(confirm("确认删除【"+empName+"】吗？")){
    //     确认就发送ajax请求删除员工
        $.ajax({
-           url:"${APP_PATH}/emp/"+empId,
+           url:"emp/"+empId,
            type:"DELETE",
            success:function (result) {
                alert(result.msg)
@@ -550,7 +551,7 @@ $("#emp_delete_all_btn").click(function () {
     if(confirm("确认删除【"+empNames+"】吗?")){
         //发送ajax请求
         $.ajax({
-            url:"${APP_PATH}/emp/"+del_idstr,
+            url:"emp/"+del_idstr,
             type:"DELETE",
             success:function (result) {
                 alert(result.msg);
